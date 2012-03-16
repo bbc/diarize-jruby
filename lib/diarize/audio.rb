@@ -1,5 +1,6 @@
 require 'tempfile'
 require File.join(File.expand_path(File.dirname(__FILE__)), 'lium')
+require File.join(File.expand_path(File.dirname(__FILE__)), 'segmentation')
 
 module Diarize
 
@@ -10,6 +11,7 @@ module Diarize
     end
 
     def diarize
+      return @segmentation if @segmentation
       seg_file = Tempfile.new(['diarize-jruby', '.seg'])
       parameter = fr.lium.spkDiarization.parameter.Parameter.new
       parameter.show = File.expand_path(@path).split('/')[-1].split('.')[0]
@@ -28,6 +30,7 @@ module Diarize
       parameter.parameterSegmentationOutputFile.setMask(seg_file.path)
       diarization = fr.lium.spkDiarization.system.Diarization.new
       diarization.ester2Version(parameter)
+      @segmentation = Segmentation.from_seg_file(seg_file.path)
     end
 
   end
