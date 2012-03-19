@@ -9,7 +9,7 @@ class Diarize
       stream = javax.sound.sampled.AudioSystem.getAudioInputStream(java_file)
       clip = javax.sound.sampled.AudioSystem.clip
       clip.open(stream)
-      clip.setMicrosecondPosition(duration * 1000000)
+      clip.setMicrosecondPosition(start * 1000000)
       clip.start
       begin
         sleep(duration)
@@ -18,6 +18,7 @@ class Diarize
       end
       clip.stop
       clip.close
+      stream.close
     end
 
   end
