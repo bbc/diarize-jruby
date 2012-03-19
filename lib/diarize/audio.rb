@@ -10,7 +10,7 @@ module Diarize
       @path = path
     end
 
-    def diarize
+    def segmentation
       return @segmentation if @segmentation
       seg_file = Tempfile.new(['diarize-jruby', '.seg'])
       parameter = fr.lium.spkDiarization.parameter.Parameter.new
