@@ -1,6 +1,6 @@
 require 'java'
 
-class Diarize
+module Diarize
 
   class AudioPlayer
 

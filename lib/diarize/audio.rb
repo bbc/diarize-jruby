@@ -6,11 +6,14 @@ module Diarize
 
   class Audio
 
+    attr_reader :file
+
     def initialize(path)
       @path = path
+      @file = File.new path
     end
 
-    def segmentation
+    def segments
       return @segmentation if @segmentation
       seg_file = Tempfile.new(['diarize-jruby', '.seg'])
       parameter = fr.lium.spkDiarization.parameter.Parameter.new
@@ -30,7 +33,7 @@ module Diarize
       parameter.parameterSegmentationOutputFile.setMask(seg_file.path)
       diarization = fr.lium.spkDiarization.system.Diarization.new
       diarization.ester2Version(parameter)
-      @segmentation = Segmentation.from_seg_file(seg_file.path)
+      @segmentation = Segmentation.from_seg_file(self, seg_file.path)
     end
 
   end
