@@ -42,6 +42,10 @@ module Diarize
       @speakers = segments.map { |segment| segment.speaker }.uniq
     end
 
+    def segments_by_speaker(speaker)
+      segments.select { |segment| segment.speaker == speaker }
+    end
+
   end
 
 end
