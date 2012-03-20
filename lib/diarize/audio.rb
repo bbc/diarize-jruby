@@ -1,12 +1,13 @@
 require 'tempfile'
 require File.join(File.expand_path(File.dirname(__FILE__)), 'lium')
 require File.join(File.expand_path(File.dirname(__FILE__)), 'segmentation')
+require File.join(File.expand_path(File.dirname(__FILE__)), 'speaker')
 
 module Diarize
 
   class Audio
 
-    attr_reader :file
+    attr_reader :path, :file
 
     def initialize(path)
       @path = path
@@ -34,6 +35,11 @@ module Diarize
       diarization = fr.lium.spkDiarization.system.Diarization.new
       diarization.ester2Version(parameter)
       @segmentation = Segmentation.from_seg_file(self, seg_file.path)
+    end
+
+    def speakers
+      return @speakers if @speakers
+      @speakers = segments.map { |segment| segment.speaker }.uniq
     end
 
   end

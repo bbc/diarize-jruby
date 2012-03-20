@@ -4,14 +4,14 @@ module Diarize
 
   class Segment
 
-    attr_accessor :start, :duration, :gender, :id
+    attr_reader :start, :duration, :gender, :speaker
 
-    def initialize(audio, start, duration, gender, id)
+    def initialize(audio, start, duration, gender, speaker_id)
       @audio = audio
       @start = start
       @duration = duration
       @gender = gender
-      @id = id
+      @speaker = Speaker.find_or_create speaker_id + '_' + audio.path
     end
 
     def play
