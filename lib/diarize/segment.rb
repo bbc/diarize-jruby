@@ -10,8 +10,7 @@ module Diarize
       @audio = audio
       @start = start
       @duration = duration
-      @gender = gender
-      @speaker = Speaker.find_or_create speaker_id + '_' + audio.path
+      @speaker = Speaker.find_or_create(speaker_id + '_' + audio.path, gender)
     end
 
     def play

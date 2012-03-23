@@ -4,15 +4,16 @@ module Diarize
 
     @@speakers = {}
 
-    attr_reader :id
+    attr_reader :id, :gender
 
-    def initialize(id)
+    def initialize(id, gender)
       @id = id
+      @gender = gender
     end
 
-    def self.find_or_create(id)
+    def self.find_or_create(id, gender)
       return @@speakers[id] if @@speakers[id]
-      @@speakers[id] = Speaker.new id
+      @@speakers[id] = Speaker.new(id, gender)
     end
 
   end
