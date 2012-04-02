@@ -17,6 +17,11 @@ module Diarize
       @@speakers[id] = Speaker.new(id, gender)
     end
 
+    def self.divergence(speaker1, speaker2)
+      # MAP Gaussian divergence
+      fr.lium.spkDiarization.libModel.Distance.GDMAP(speaker1.model, speaker2.model)
+    end
+
   end
 
 end
