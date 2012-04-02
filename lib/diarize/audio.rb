@@ -43,6 +43,13 @@ module Diarize
       segments.select { |segment| segment.speaker == speaker }
     end
 
+    def duration_by_speaker(speaker)
+      segments = segments_by_speaker(speaker)
+      duration = 0.0
+      segments.each { |segment| duration += segment.duration }
+      duration
+    end
+
     protected
 
     def train_speaker_gmms
