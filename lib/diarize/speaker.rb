@@ -4,6 +4,7 @@ module Diarize
 
     @@speakers = {}
 
+    attr_accessor :model
     attr_reader :id, :gender
 
     def initialize(id, gender)

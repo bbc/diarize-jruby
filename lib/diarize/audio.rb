@@ -67,7 +67,11 @@ module Diarize
       features.setCurrentShow(parameter.show)
       gmm_vect = java.util.ArrayList.new
       fr.lium.spkDiarization.programs.MTrainMAP.make(features, @clusters, init_vect, gmm_vect, parameter)
-      gmm_vect
+
+      # Populating the speakers with their GMMs
+      gmm_vect.each_with_index do |speaker_model, i|
+        speakers[i].model = speaker_model
+      end
     end
 
     protected
