@@ -18,6 +18,7 @@ module Diarize
     end
 
     def self.divergence(speaker1, speaker2)
+      return unless speaker1.model and speaker2.model
       # MAP Gaussian divergence
       fr.lium.spkDiarization.libModel.Distance.GDMAP(speaker1.model, speaker2.model)
     end
