@@ -16,7 +16,7 @@ module Diarize
     def segments
       return @segmentation if @segmentation
       parameter = fr.lium.spkDiarization.parameter.Parameter.new
-      parameter.show = File.expand_path(@path).split('/')[-1].split('.')[0]
+      parameter.show = show
       # 12 MFCC + Energy
       # 1: static coefficients are present in the file
       # 1: energy coefficient is present in the file
@@ -27,10 +27,10 @@ module Diarize
       # 13: total size of a feature vector in the mfcc file
       # 0:0:0: no feature normalization
       parameter.parameterInputFeature.setFeaturesDescription('audio2sphinx,1:1:0:0:0:0,13,0:0:0:0')
-      parameter.parameterDiarization.cEClustering = true
+      parameter.parameterDiarization.cEClustering = true # We use CE clustering by default
       parameter.parameterInputFeature.setFeatureMask(@path)
-      clusters = ester2(parameter)
-      @segmentation = Segmentation.from_clusters(self, clusters)
+      @clusters = ester2(parameter)
+      @segmentation = Segmentation.from_clusters(self, @clusters)
     end
 
     def speakers
@@ -42,7 +42,39 @@ module Diarize
       segments.select { |segment| segment.speaker == speaker }
     end
 
+    def speaker_models
+      segments # Making sure we have pre-computed segments and clusters
+      # Would be nice to reuse GMMs computed as part of the segmentation process
+      # but not sure how to access them without changing the Java API
+
+      # Start by copying models from ubm.gmm, one per speaker, using MTrainInit
+      parameter = fr.lium.spkDiarization.parameter.Parameter.new
+      parameter.parameterInputFeature.setFeaturesDescription('audio2sphinx,1:3:2:0:0:0,13,1:1:300:4')
+      parameter.parameterInputFeature.setFeatureMask(@path)
+      parameter.parameterInitializationEM.setModelInitMethod('copy')
+      parameter.parameterModelSetInputFile.setMask(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
+      features = fr.lium.spkDiarization.lib.MainTools.readFeatureSet(parameter, @clusters)
+      init_vect = java.util.ArrayList.new(@clusters.cluster_get_size)
+      fr.lium.spkDiarization.programs.MTrainInit.make(features, @clusters, init_vect, parameter)
+
+      # Adapt models to individual speakers detected in the audio, using MTrainMap
+      parameter = fr.lium.spkDiarization.parameter.Parameter.new
+      parameter.parameterInputFeature.setFeaturesDescription('audio2sphinx,1:3:2:0:0:0,13,1:1:300:4')
+      parameter.parameterInputFeature.setFeatureMask(@path)
+      parameter.parameterEM.setEMControl('1,5,0.01')
+      parameter.parameterVarianceControl.setVarianceControl('0.01,10.0')
+      parameter.show = show
+      features.setCurrentShow(parameter.show)
+      gmm_vect = java.util.ArrayList.new
+      fr.lium.spkDiarization.programs.MTrainMAP.make(features, @clusters, init_vect, gmm_vect, parameter)
+      gmm_vect
+    end
+
     protected
+
+    def show
+      File.expand_path(@path).split('/')[-1].split('.')[0]
+    end
 
     def ester2(parameter)
       diarization = fr.lium.spkDiarization.system.Diarization.new
