@@ -13,7 +13,7 @@ module Diarize
       @file = File.new path
     end
 
-    def segments
+    def segments(train_speaker_models = true)
       return @segmentation if @segmentation
       parameter = fr.lium.spkDiarization.parameter.Parameter.new
       parameter.show = show
@@ -31,6 +31,7 @@ module Diarize
       parameter.parameterInputFeature.setFeatureMask(@path)
       @clusters = ester2(parameter)
       @segmentation = Segmentation.from_clusters(self, @clusters)
+      train_speaker_gmms if train_speaker_models
     end
 
     def speakers
@@ -42,7 +43,9 @@ module Diarize
       segments.select { |segment| segment.speaker == speaker }
     end
 
-    def speaker_models
+    protected
+
+    def train_speaker_gmms
       segments # Making sure we have pre-computed segments and clusters
       # Would be nice to reuse GMMs computed as part of the segmentation process
       # but not sure how to access them without changing the Java API
@@ -73,8 +76,6 @@ module Diarize
         speakers[i].model = speaker_model
       end
     end
-
-    protected
 
     def show
       File.expand_path(@path).split('/')[-1].split('.')[0]
