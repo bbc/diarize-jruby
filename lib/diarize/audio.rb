@@ -51,6 +51,10 @@ module Diarize
       duration
     end
 
+    def top_speakers
+      speakers.sort {|s1, s2| duration_by_speaker(s1) <=> duration_by_speaker(s2)}.reverse
+    end
+
     protected
 
     def train_speaker_gmms
