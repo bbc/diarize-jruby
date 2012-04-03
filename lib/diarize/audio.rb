@@ -44,6 +44,7 @@ module Diarize
     end
 
     def duration_by_speaker(speaker)
+      return unless speaker
       segments = segments_by_speaker(speaker)
       duration = 0.0
       segments.each { |segment| duration += segment.duration }
