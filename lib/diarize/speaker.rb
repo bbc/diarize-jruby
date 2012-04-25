@@ -7,7 +7,7 @@ module Diarize
     attr_accessor :model
     attr_reader :id, :gender
 
-    def initialize(id, gender)
+    def initialize(id = nil, gender = nil)
       @id = id
       @gender = gender
     end
@@ -18,10 +18,34 @@ module Diarize
     end
 
     def self.divergence(speaker1, speaker2)
+      # TODO bundle in mean_log_likelihood to weight down unlikely models? 
       return unless speaker1.model and speaker2.model
       # MAP Gaussian divergence
       fr.lium.spkDiarization.libModel.Distance.GDMAP(speaker1.model, speaker2.model)
     end
+
+    def self.generic
+      # A generic speaker
+      speaker = Speaker.new
+      speaker.model = read_gmm(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
+      speaker
+    end
+
+    # Also consider Euclidian distance between GMMs and Mahalanobis distance (see 1 and 11 in Helen2010) ?
+    # Also consider using Distance.getScore or other functions in the Distance class
+    # Consider distance to generic model
+
+    protected
+
+    def self.read_gmm(filename)
+      gmmlist = java.util.ArrayList.new
+      input = fr.lium.spkDiarization.lib.IOFile.new(filename, 'rb')
+      input.open
+      fr.lium.spkDiarization.libModel.ModelIO.readerGMMContainer(input, gmmlist)
+      input.close
+      gmmlist.to_a.first
+    end
+
 
   end
 
