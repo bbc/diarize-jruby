@@ -55,6 +55,14 @@ module Diarize
       gmmlist.to_a.first
     end
 
+    def write_gmm(filename, model)
+      gmmlist = java.util.ArrayList.new
+      gmmlist << model
+      output = fr.lium.spkDiarization.lib.IOFile.new(filename, 'wb')
+      output.open
+      fr.lium.spkDiarization.libModel.ModelIO.writerGMMContainer(output, gmmlist)
+      output.close
+    end
 
   end
 
