@@ -9,7 +9,7 @@ module Diarize
 
     def initialize(id = nil, gender = nil)
       unless id and gender
-        # A generic speaker
+        # A generic speaker, associated with a universal background model
         @model = read_gmm(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
       else
         @id = id

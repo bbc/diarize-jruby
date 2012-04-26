@@ -62,7 +62,7 @@ module Diarize
       # Would be nice to reuse GMMs computed as part of the segmentation process
       # but not sure how to access them without changing the Java API
 
-      # Start by copying models from ubm.gmm, one per speaker, using MTrainInit
+      # Start by copying models from the universal background model, one per speaker, using MTrainInit
       parameter = fr.lium.spkDiarization.parameter.Parameter.new
       parameter.parameterInputFeature.setFeaturesDescription('audio2sphinx,1:3:2:0:0:0,13,1:1:300:4')
       parameter.parameterInputFeature.setFeatureMask(@path)
