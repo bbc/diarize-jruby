@@ -2,6 +2,10 @@ module Diarize
 
   class Speaker
 
+    # Some possible matching heuristics if using GDMAP:
+    # - speaker mean_log_likelihood needs to be more than -33 to be considered for match
+    # - distance between two speakers need to be less than distance between speaker and universal model to be considered
+
     @@speakers = {}
 
     attr_accessor :model
@@ -27,11 +31,10 @@ module Diarize
       return unless speaker1.model and speaker2.model
       # MAP Gaussian divergence
       fr.lium.spkDiarization.libModel.Distance.GDMAP(speaker1.model, speaker2.model)
+      # Also consider Euclidian distance between GMMs and Mahalanobis distance (see 1 and 11 in Helen2010) ?
+      # Also consider using Distance.getScore or other functions in the Distance class
+      # Consider distance to generic model
     end
-
-    # Also consider Euclidian distance between GMMs and Mahalanobis distance (see 1 and 11 in Helen2010) ?
-    # Also consider using Distance.getScore or other functions in the Distance class
-    # Consider distance to generic model
 
     protected
 
