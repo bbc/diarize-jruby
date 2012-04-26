@@ -4,7 +4,10 @@ module Diarize
 
     # Some possible matching heuristics if using GDMAP:
     # - speaker mean_log_likelihood needs to be more than -33 to be considered for match
-    # - distance between two speakers need to be less than distance between speaker and universal model to be considered
+    # - distance between two speakers need to be less than distance between speaker and universal model + detection threshold to be considered
+
+    @@log_likelihood_threshold = -33
+    @@divergence_threshold = 0.2
 
     @@speakers = {}
 
@@ -34,6 +37,11 @@ module Diarize
       # Also consider Euclidian distance between GMMs and Mahalanobis distance (see 1 and 11 in Helen2010) ?
       # Also consider using Distance.getScore or other functions in the Distance class
       # Consider distance to generic model
+    end
+
+    def self.match(speakers)
+      speakers = speakers.select { |s| s.model.mean_log_likelihood > @@log_likelihood_threshold }
+      speakers.combination(2).select { |s1, s2| Speaker.divergence(s1, s2) < Speaker.divergence(s1, Speaker.new) - @@divergence_threshold }
     end
 
     protected
