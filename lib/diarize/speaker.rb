@@ -8,8 +8,13 @@ module Diarize
     attr_reader :id, :gender
 
     def initialize(id = nil, gender = nil)
-      @id = id
-      @gender = gender
+      unless id and gender
+        # A generic speaker
+        @model = read_gmm(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
+      else
+        @id = id
+        @gender = gender
+      end
     end
 
     def self.find_or_create(id, gender)
@@ -24,20 +29,13 @@ module Diarize
       fr.lium.spkDiarization.libModel.Distance.GDMAP(speaker1.model, speaker2.model)
     end
 
-    def self.generic
-      # A generic speaker
-      speaker = Speaker.new
-      speaker.model = read_gmm(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
-      speaker
-    end
-
     # Also consider Euclidian distance between GMMs and Mahalanobis distance (see 1 and 11 in Helen2010) ?
     # Also consider using Distance.getScore or other functions in the Distance class
     # Consider distance to generic model
 
     protected
 
-    def self.read_gmm(filename)
+    def read_gmm(filename)
       gmmlist = java.util.ArrayList.new
       input = fr.lium.spkDiarization.lib.IOFile.new(filename, 'rb')
       input.open
