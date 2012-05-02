@@ -4,7 +4,6 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'speaker')
 
 require 'rubygems'
 require 'rdf_mapper'
-require 'tempfile'
 require 'uri'
 
 module Diarize
@@ -20,8 +19,7 @@ module Diarize
         @path = uri.path
       else
         # Remote file, we get it locally
-        tmp = Tempfile.new(['abcip', '.wav'])
-        @path = tmp.path
+        @path = '/tmp/' + URI.escape(uri.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
         `wget #{uri} -O #{@path}`
       end
       @file = File.new @path

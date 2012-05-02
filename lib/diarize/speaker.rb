@@ -14,7 +14,7 @@ module Diarize
 
     @@speakers = {}
 
-    attr_accessor :model
+    attr_accessor :model, :model_uri
     attr_reader :gender
 
     def initialize(uri = nil, gender = nil)
@@ -25,6 +25,10 @@ module Diarize
         @uri = uri
         @gender = gender
       end
+    end
+
+    def save_model(filename)
+      write_gmm(filename, @model)
     end
 
     def self.find_or_create(uri, gender)
@@ -62,7 +66,7 @@ module Diarize
     end
 
     def rdf_mapping
-      { 'ws:gender' => gender }
+      { 'ws:gender' => gender, 'ws:model' => model_uri }
     end 
 
     protected
