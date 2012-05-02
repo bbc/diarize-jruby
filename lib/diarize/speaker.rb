@@ -62,9 +62,7 @@ module Diarize
     end
 
     def rdf_mapping
-      {
-        'ws:gender' => gender,
-      }
+      { 'ws:gender' => gender }
     end 
 
     protected
