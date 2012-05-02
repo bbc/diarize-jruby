@@ -1,3 +1,6 @@
+require 'rubygems'
+require 'rdf_mapper'
+
 module Diarize
 
   class Speaker
@@ -12,21 +15,21 @@ module Diarize
     @@speakers = {}
 
     attr_accessor :model
-    attr_reader :id, :gender
+    attr_reader :gender
 
-    def initialize(id = nil, gender = nil)
-      unless id and gender
+    def initialize(uri = nil, gender = nil)
+      unless uri and gender
         # A generic speaker, associated with a universal background model
         @model = read_gmm(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
       else
-        @id = id
+        @uri = uri
         @gender = gender
       end
     end
 
-    def self.find_or_create(id, gender)
-      return @@speakers[id] if @@speakers[id]
-      @@speakers[id] = Speaker.new(id, gender)
+    def self.find_or_create(uri, gender)
+      return @@speakers[uri] if @@speakers[uri]
+      @@speakers[uri] = Speaker.new(uri, gender)
     end
 
     def self.divergence(speaker1, speaker2)
@@ -43,6 +46,26 @@ module Diarize
       speakers = speakers.select { |s| s.model.mean_log_likelihood > @@log_likelihood_threshold }
       speakers.combination(2).select { |s1, s2| Speaker.divergence(s1, s2) < Speaker.divergence(s1, Speaker.new) - @@divergence_threshold }
     end
+
+    include RdfMapper
+
+    def namespaces
+      super.merge 'ws' => 'http://wsarchive.prototype0.net/ontology/'
+    end
+
+    def uri
+      @uri
+    end
+
+    def type_uri
+      'ws:Speaker'
+    end
+
+    def rdf_mapping
+      {
+        'ws:gender' => gender,
+      }
+    end 
 
     protected
 

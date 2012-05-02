@@ -2,18 +2,32 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'lium')
 require File.join(File.expand_path(File.dirname(__FILE__)), 'segmentation')
 require File.join(File.expand_path(File.dirname(__FILE__)), 'speaker')
 
+require 'rubygems'
+require 'rdf_mapper'
+require 'tempfile'
+require 'uri'
+
 module Diarize
 
   class Audio
 
     attr_reader :path, :file
 
-    def initialize(path)
-      @path = path
-      @file = File.new path
+    def initialize(uri)
+      @uri = uri
+      if uri.scheme == 'file'
+        # Local file
+        @path = uri.path
+      else
+        # Remote file, we get it locally
+        tmp = Tempfile.new(['abcip', '.wav'])
+        @path = tmp.path
+        `wget #{uri} -O #{@path}`
+      end
+      @file = File.new @path
     end
 
-    def segments(train_speaker_models = true)
+    def analyze!(train_speaker_models = true)
       return @segmentation if @segmentation
       parameter = fr.lium.spkDiarization.parameter.Parameter.new
       parameter.show = show
@@ -30,8 +44,13 @@ module Diarize
       parameter.parameterDiarization.cEClustering = true # We use CE clustering by default
       parameter.parameterInputFeature.setFeatureMask(@path)
       @clusters = ester2(parameter)
-      @segmentation = Segmentation.from_clusters(self, @clusters)
+      @segments = Segmentation.from_clusters(self, @clusters)
       train_speaker_gmms if train_speaker_models
+    end
+
+    def segments
+      raise Exception.new('You need to run analyze! before being able to access the analysis results') unless @segments
+      @segments
     end
 
     def speakers
@@ -53,6 +72,24 @@ module Diarize
 
     def top_speakers
       speakers.sort {|s1, s2| duration_by_speaker(s1) <=> duration_by_speaker(s2)}.reverse
+    end
+
+    include RdfMapper
+
+    def namespaces
+      super.merge 'ws' => 'http://wsarchive.prototype0.net/ontology/'
+    end
+
+    def uri
+      @uri
+    end
+
+    def type_uri
+      'ws:AudioItem'
+    end
+
+    def rdf_mapping
+      { 'ws:segment' => segments }
     end
 
     protected
