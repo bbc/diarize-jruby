@@ -46,6 +46,11 @@ module Diarize
       train_speaker_gmms if train_speaker_models
     end
 
+    def clean!
+      return if @uri.scheme == 'file' # Don't delete local file if initialised from local URI
+      File.delete(@path)
+    end
+
     def segments
       raise Exception.new('You need to run analyze! before being able to access the analysis results') unless @segments
       @segments
