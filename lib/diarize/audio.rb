@@ -80,7 +80,7 @@ module Diarize
     include RdfMapper
 
     def namespaces
-      super.merge 'ws' => 'http://wsarchive.prototype0.net/ontology/'
+      super.merge 'ws' => 'http://wsarchive.prototype0.net/ontology/', 'mo' => 'http://purl.org/ontology/mo/'
     end
 
     def uri
@@ -88,7 +88,7 @@ module Diarize
     end
 
     def type_uri
-      'ws:AudioItem'
+      'mo:AudioFile'
     end
 
     def rdf_mapping
