@@ -17,14 +17,26 @@ module Diarize
     attr_accessor :model, :model_uri
     attr_reader :gender
 
-    def initialize(uri = nil, gender = nil)
+    def initialize(uri = nil, gender = nil, model_file = nil)
       unless uri and gender
-        # A generic speaker, associated with a universal background model
-        @model = Speaker.load_model(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
+        unless model_file
+          # A generic speaker, associated with a universal background model
+          @model = Speaker.load_model(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
+        else
+          @model = Speaker.load_model(model_file)
+        end
       else
         @uri = uri
         @gender = gender
       end
+    end
+
+    def mean_log_likelihood
+      @mean_log_likelihood ? @mean_log_likelihood :model.mean_log_likelihood # Will be NaN if model was loaded from somewhere
+    end
+
+    def mean_log_likelihood=(mll)
+      @mean_log_likelihood = mll
     end
 
     def save_model(filename)
@@ -51,7 +63,7 @@ module Diarize
     end
 
     def self.match(speakers)
-      speakers = speakers.select { |s| s.model.mean_log_likelihood > @@log_likelihood_threshold }
+      speakers = speakers.select { |s| s.mean_log_likelihood > @@log_likelihood_threshold }
       speakers.combination(2).select { |s1, s2| Speaker.divergence(s1, s2) < Speaker.divergence(s1, Speaker.new) - @@divergence_threshold }
     end
 
