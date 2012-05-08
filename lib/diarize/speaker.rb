@@ -20,7 +20,7 @@ module Diarize
     def initialize(uri = nil, gender = nil)
       unless uri and gender
         # A generic speaker, associated with a universal background model
-        @model = read_gmm(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
+        @model = Speaker.load_model(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
       else
         @uri = uri
         @gender = gender
@@ -29,6 +29,10 @@ module Diarize
 
     def save_model(filename)
       write_gmm(filename, @model)
+    end
+
+    def self.load_model(filename)
+      read_gmm(filename)
     end
 
     def self.find_or_create(uri, gender)
@@ -66,12 +70,12 @@ module Diarize
     end
 
     def rdf_mapping
-      { 'ws:gender' => gender, 'ws:model' => model_uri }
+      { 'ws:gender' => gender, 'ws:model' => model_uri, 'ws:mean_log_likelihood' => model.mean_log_likelihood }
     end 
 
     protected
 
-    def read_gmm(filename)
+    def self.read_gmm(filename)
       gmmlist = java.util.ArrayList.new
       input = fr.lium.spkDiarization.lib.IOFile.new(filename, 'rb')
       input.open
