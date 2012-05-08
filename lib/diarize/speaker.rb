@@ -18,17 +18,14 @@ module Diarize
     attr_reader :gender
 
     def initialize(uri = nil, gender = nil, model_file = nil)
-      unless uri and gender
-        unless model_file
-          # A generic speaker, associated with a universal background model
-          @model = Speaker.load_model(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
-        else
-          @model = Speaker.load_model(model_file)
-        end
+      unless model_file
+        # A generic speaker, associated with a universal background model
+        @model = Speaker.load_model(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
       else
-        @uri = uri
-        @gender = gender
+        @model = Speaker.load_model(model_file)
       end
+      @uri = uri
+      @gender = gender
     end
 
     def mean_log_likelihood
