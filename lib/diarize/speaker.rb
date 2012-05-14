@@ -10,7 +10,6 @@ module Diarize
     # - distance between two speakers need to be less than distance between speaker and universal model + detection threshold to be considered
 
     @@log_likelihood_threshold = -33
-    @@divergence_margin = 0.0
 
     @@speakers = {}
 
@@ -65,7 +64,7 @@ module Diarize
     def same_speaker_as(other)
       # Detection score defined in Ben2005
       # detection_score = Speaker.divergence(other, Speaker.new) - Speaker.divergence(other, self)
-      Speaker.divergence(self, other) < [ Speaker.divergence(self, Speaker.new), Speaker.divergence(other, Speaker.new) ].min - @@divergence_margin
+      Speaker.divergence(self, other) < [ Speaker.divergence(self, Speaker.new), Speaker.divergence(other, Speaker.new) ].min
     end
 
     include RdfMapper
