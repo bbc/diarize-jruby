@@ -10,7 +10,7 @@ module Diarize
     # - distance between two speakers need to be less than distance between speaker and universal model + detection threshold to be considered
 
     @@log_likelihood_threshold = -33
-    @@divergence_threshold = 0.2
+    @@divergence_margin = 0.0
 
     @@speakers = {}
 
@@ -53,15 +53,17 @@ module Diarize
       # TODO bundle in mean_log_likelihood to weight down unlikely models? 
       return unless speaker1.model and speaker2.model
       # MAP Gaussian divergence
+      # See "A model space framework for efficient speaker detection", Interspeech'05
       fr.lium.spkDiarization.libModel.Distance.GDMAP(speaker1.model, speaker2.model)
-      # Also consider Euclidian distance between GMMs and Mahalanobis distance (see 1 and 11 in Helen2010) ?
-      # Also consider using Distance.getScore or other functions in the Distance class
-      # Consider distance to generic model
     end
 
     def self.match(speakers)
       speakers = speakers.select { |s| s.mean_log_likelihood > @@log_likelihood_threshold }
-      speakers.combination(2).select { |s1, s2| Speaker.divergence(s1, s2) < Speaker.divergence(s1, Speaker.new) - @@divergence_threshold }
+      speakers.combination(2).select { |s1, s2| s1.same_speaker_as(s2) }
+    end
+
+    def same_speaker_as(other)
+      Speaker.divergence(self, other) < [ Speaker.divergence(self, Speaker.new), Speaker.divergence(other, Speaker.new) ].min - @@divergence_margin
     end
 
     include RdfMapper
