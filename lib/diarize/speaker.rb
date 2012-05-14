@@ -10,6 +10,7 @@ module Diarize
     # - distance between two speakers need to be less than distance between speaker and universal model + detection threshold to be considered
 
     @@log_likelihood_threshold = -33
+    @@detection_threshold = 0.2 # Need to learn that parameter
 
     @@speakers = {}
 
@@ -25,6 +26,7 @@ module Diarize
       end
       @uri = uri
       @gender = gender
+      @normalized = false
     end
 
     def mean_log_likelihood
@@ -36,6 +38,7 @@ module Diarize
     end
 
     def save_model(filename)
+      # TODO perhaps a warning if a normalised model is being saved?
       write_gmm(filename, @model)
     end
 
@@ -57,14 +60,36 @@ module Diarize
     end
 
     def self.match(speakers)
+      speakers.each { |s| s.normalize! }
       speakers = speakers.select { |s| s.mean_log_likelihood > @@log_likelihood_threshold }
       speakers.combination(2).select { |s1, s2| s1.same_speaker_as(s2) }
     end
 
+    def normalize!
+      unless @normalized
+        # Applies M-Norm from "D-MAP: a Distance-Normalized MAP Estimation of Speaker Models for Automatic Speaker Verification"
+        # to the associated GMM, placing it on a unit hyper-sphere with a UBM centre (model will be at distance one from the UBM
+        # according to GDMAP)
+        speaker_ubm = Speaker.new
+        distance_to_ubm = Math.sqrt(Speaker.divergence(self, speaker_ubm))
+        (0..(model.nb_of_components - 1)).each do |k|
+          gaussian = model.components.get(k)
+          (0..(gaussian.dim - 1)).each do |i|
+            normalized_mean = (1.0 / distance_to_ubm) * gaussian.mean(i) + (1.0 - 1.0 / distance_to_ubm)  * speaker_ubm.model.components.get(k).mean(i)
+            gaussian.set_mean(i, normalized_mean) 
+          end
+        end
+        @normalized = true
+      end
+      @normalized
+    end
+
     def same_speaker_as(other)
       # Detection score defined in Ben2005
-      # detection_score = Speaker.divergence(other, Speaker.new) - Speaker.divergence(other, self)
-      Speaker.divergence(self, other) < [ Speaker.divergence(self, Speaker.new), Speaker.divergence(other, Speaker.new) ].min
+      self.normalize!
+      other.normalize!
+      detection_score = 1.0 - Speaker.divergence(other, self)
+      detection_score > @@detection_threshold
     end
 
     include RdfMapper
