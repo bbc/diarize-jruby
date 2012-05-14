@@ -29,7 +29,7 @@ module Diarize
     end
 
     def mean_log_likelihood
-      @mean_log_likelihood ? @mean_log_likelihood :model.mean_log_likelihood # Will be NaN if model was loaded from somewhere
+      @mean_log_likelihood ? @mean_log_likelihood : model.mean_log_likelihood # Will be NaN if model was loaded from somewhere
     end
 
     def mean_log_likelihood=(mll)
@@ -63,6 +63,8 @@ module Diarize
     end
 
     def same_speaker_as(other)
+      # Detection score defined in Ben2005
+      # detection_score = Speaker.divergence(other, Speaker.new) - Speaker.divergence(other, self)
       Speaker.divergence(self, other) < [ Speaker.divergence(self, Speaker.new), Speaker.divergence(other, Speaker.new) ].min - @@divergence_margin
     end
 
