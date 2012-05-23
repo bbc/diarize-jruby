@@ -20,7 +20,7 @@ module Diarize
     end
 
     def speaker
-      Speaker.find_or_create(URI("#{@audio.uri}##{@speaker_id}"), @speaker_gender)
+      Speaker.find_or_create(URI("#{@audio.base_uri}##{@speaker_id}"), @speaker_gender)
     end
 
     def play
@@ -36,7 +36,7 @@ module Diarize
 
     def uri
       # http://www.w3.org/TR/media-frags/
-      URI("#{@audio.uri}#t=#{start},#{start+duration}")
+      URI("#{@audio.base_uri}#t=#{start},#{start+duration}")
     end
 
     def type_uri

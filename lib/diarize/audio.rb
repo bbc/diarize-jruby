@@ -87,8 +87,23 @@ module Diarize
       @uri
     end
 
+    def uri=(uri)
+      @uri = uri
+    end
+
+    def base_uri
+      # Remove the fragment if there is one
+      base = uri.clone
+      base.fragment = nil
+      base
+    end
+
     def type_uri
-      'mo:AudioFile'
+      @type_uri || 'mo:AudioFile'
+    end
+
+    def type_uri=(type_uri)
+      @type_uri = type_uri
     end
 
     def rdf_mapping
