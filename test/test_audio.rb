@@ -41,7 +41,7 @@ class TestAudio < Test::Unit::TestCase
   end
 
   def test_analyze
-    # We don't test the full ESTER2 algorithm for now
+    # TODO - We don't test the full ESTER2 algorithm for now
   end
 
   def test_set_uri_and_type_uri
