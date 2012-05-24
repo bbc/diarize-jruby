@@ -32,4 +32,27 @@ class TestAudio < Test::Unit::TestCase
     audio.clean!
   end
 
+  def test_segments_raises_exception_when_audio_is_not_analysed
+    audio_uri = URI('file:' + File.join(File.dirname(__FILE__), 'data', 'foo.wav'))
+    audio = Diarize::Audio.new audio_uri
+    assert_raise Exception do
+      audio.segments
+    end
+  end
+
+  def test_set_uri_and_type_uri
+    audio_uri = URI('file:' + File.join(File.dirname(__FILE__), 'data', 'foo.wav'))
+    audio = Diarize::Audio.new audio_uri
+    audio.uri = 'foo'
+    audio.type_uri = 'bar'
+    assert_equal audio.uri, 'foo'
+    assert_equal audio.type_uri, 'bar'
+  end
+
+  def test_show
+    audio_uri = URI('file:' + File.join(File.dirname(__FILE__), 'data', 'foo.wav'))
+    audio = Diarize::Audio.new audio_uri
+    assert_equal audio.show, 'foo'
+  end
+
 end

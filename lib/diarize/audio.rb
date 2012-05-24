@@ -110,6 +110,11 @@ module Diarize
       { 'ws:segment' => segments }
     end
 
+    def show
+      # The LIUM show name will be the file name, without extension or directory
+      File.expand_path(@path).split('/')[-1].split('.')[0]
+    end
+
     protected
 
     def train_speaker_gmms
@@ -142,10 +147,6 @@ module Diarize
       gmm_vect.each_with_index do |speaker_model, i|
         speakers[i].model = speaker_model
       end
-    end
-
-    def show
-      File.expand_path(@path).split('/')[-1].split('.')[0]
     end
 
     def ester2(parameter)
