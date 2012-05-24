@@ -20,7 +20,7 @@ module Diarize
       else
         # Remote file, we get it locally
         @path = '/tmp/' + URI.escape(uri.to_s, Regexp.new("[^#{URI::PATTERN::UNRESERVED}]"))
-        `wget #{uri} -O #{@path}`
+        Kernel.system("wget #{uri} -O #{@path}")
       end
       @file = File.new @path
     end
