@@ -26,7 +26,6 @@ module Diarize
     end
 
     def analyze!(train_speaker_models = true)
-      return @segmentation if @segmentation
       parameter = fr.lium.spkDiarization.parameter.Parameter.new
       parameter.show = show
       # 12 MFCC + Energy
