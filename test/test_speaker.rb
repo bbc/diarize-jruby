@@ -8,6 +8,12 @@ class TestSpeaker < Test::Unit::TestCase
     assert_equal speaker2.object_id, speaker1.object_id
   end
 
+  def test_initialize
+    speaker = Diarize::Speaker.new('uri', 'm')
+    assert_equal speaker.uri, 'uri'
+    assert_equal speaker.gender, 'm'
+  end
+
   def test_initialize_default
     speaker = Diarize::Speaker.new
     assert_equal speaker.gender, nil
