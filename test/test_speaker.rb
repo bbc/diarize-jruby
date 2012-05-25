@@ -5,7 +5,14 @@ class TestSpeaker < Test::Unit::TestCase
   def test_find_or_create_gives_same_object_if_called_with_same_id
     speaker1 = Diarize::Speaker.find_or_create('S0', 'M')
     speaker2 = Diarize::Speaker.find_or_create('S0', 'M')
-    assert_equal speaker2, speaker1
+    assert_equal speaker2.object_id, speaker1.object_id
+  end
+
+  def test_initialize_default
+    speaker = Diarize::Speaker.new
+    assert_equal speaker.gender, nil
+    assert_equal speaker.uri, nil
+    assert_equal speaker.model.name, 'MSMTFSFT' # UBM GMM
   end
 
 end
