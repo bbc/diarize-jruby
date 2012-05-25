@@ -15,4 +15,10 @@ class TestSpeaker < Test::Unit::TestCase
     assert_equal speaker.model.name, 'MSMTFSFT' # UBM GMM
   end
 
+  def test_initialize_with_model
+    model_file = File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm')
+    speaker = Diarize::Speaker.new(nil, nil, model_file)
+    assert_equal speaker.model.name, 'S0'
+  end
+
 end
