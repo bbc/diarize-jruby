@@ -1,4 +1,6 @@
 require 'helper'
+require 'ostruct'
+require 'uri'
 
 class TestSegment < Test::Unit::TestCase
 
@@ -10,6 +12,12 @@ class TestSegment < Test::Unit::TestCase
     assert_equal segment.instance_variable_get('@speaker_gender'), 'gender'
     assert_equal segment.instance_variable_get('@bandwidth'), 'bandwidth'
     assert_equal segment.instance_variable_get('@speaker_id'), 'speaker_id'
+  end
+
+  def test_speaker
+    segment = Diarize::Segment.new(OpenStruct.new({:base_uri => 'http://example.com'}), nil, nil, nil, nil, 's1') 
+    assert_equal segment.speaker.object_id, segment.speaker.object_id # same one should be generated twice
+    assert_equal segment.speaker.uri, URI('http://example.com#s1')
   end
 
 end
