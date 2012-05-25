@@ -1,4 +1,5 @@
 require 'helper'
+require 'tempfile'
 
 class TestSpeaker < Test::Unit::TestCase
 
@@ -32,6 +33,15 @@ class TestSpeaker < Test::Unit::TestCase
     assert speaker.mean_log_likelihood.nan?
     speaker.mean_log_likelihood = 1
     assert_equal speaker.mean_log_likelihood, 1
+  end
+
+  def test_save_and_load_model
+    speaker = Diarize::Speaker.new
+    tmp = Tempfile.new(['diarize-test', '.gmm'])
+    speaker.save_model(tmp.path)
+    model = Diarize::Speaker.load_model(tmp.path)
+    assert_equal speaker.model.components[0].mean(0), model.components[0].mean(0)
+    File.delete(tmp.path)
   end
 
 end
