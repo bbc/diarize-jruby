@@ -15,9 +15,10 @@ class TestSegment < Test::Unit::TestCase
   end
 
   def test_speaker
-    segment = Diarize::Segment.new(OpenStruct.new({:base_uri => 'http://example.com'}), nil, nil, nil, nil, 's1') 
+    segment = Diarize::Segment.new(OpenStruct.new({:base_uri => 'http://example.com'}), nil, nil, 'm', nil, 's1') 
     assert_equal segment.speaker.object_id, segment.speaker.object_id # same one should be generated twice
     assert_equal segment.speaker.uri, URI('http://example.com#s1')
+    assert_equal segment.speaker.gender, 'm'
   end
 
 end
