@@ -27,4 +27,11 @@ class TestSpeaker < Test::Unit::TestCase
     assert_equal speaker.model.name, 'S0'
   end
 
+  def test_mean_log_likelihood
+    speaker = Diarize::Speaker.new
+    assert speaker.mean_log_likelihood.nan?
+    speaker.mean_log_likelihood = 1
+    assert_equal speaker.mean_log_likelihood, 1
+  end
+
 end
