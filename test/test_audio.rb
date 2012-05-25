@@ -18,6 +18,7 @@ class TestAudio < Test::Unit::TestCase
 
   def test_initialize_http_uri
     Kernel.expects(:system).with("wget http://example.com/test.wav -O /tmp/http%3A%2F%2Fexample.com%2Ftest.wav").returns(true)
+    File.expects(:new).with('/tmp/http%3A%2F%2Fexample.com%2Ftest.wav').returns(true)
     audio_uri = URI('http://example.com/test.wav')
     audio = Diarize::Audio.new audio_uri
     assert_equal audio.path, '/tmp/http%3A%2F%2Fexample.com%2Ftest.wav'
@@ -32,9 +33,10 @@ class TestAudio < Test::Unit::TestCase
 
   def test_clean_http_file
     Kernel.expects(:system).with("wget http://example.com/test.wav -O /tmp/http%3A%2F%2Fexample.com%2Ftest.wav").returns(true)
+    File.expects(:new).with('/tmp/http%3A%2F%2Fexample.com%2Ftest.wav').returns(true)
     audio_uri = URI('http://example.com/test.wav')
     audio = Diarize::Audio.new audio_uri
-    File.expects(:delete).with('/tmp/http%3A%2F%2Fexample.com%2Ftest.wav')
+    File.expects(:delete).with('/tmp/http%3A%2F%2Fexample.com%2Ftest.wav').returns(true)
     audio.clean!
   end
 
