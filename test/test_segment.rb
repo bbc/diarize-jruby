@@ -21,4 +21,9 @@ class TestSegment < Test::Unit::TestCase
     assert_equal segment.speaker.gender, 'm'
   end
 
+  def test_uri
+    segment = Diarize::Segment.new(OpenStruct.new({:base_uri => 'http://example.com'}), 2, 5, 'm', nil, 's1')
+    assert_equal segment.uri, URI('http://example.com#t=2,7')
+  end
+
 end
