@@ -52,4 +52,13 @@ class TestSpeaker < Test::Unit::TestCase
     assert_equal Diarize::Speaker.divergence(speaker2, speaker1), nil
   end
 
+  def test_divergence_is_symmetric
+    model_file = File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm')
+    speaker1 = Diarize::Speaker.new(nil, nil, model_file)
+    speaker2 = Diarize::Speaker.new
+    assert Diarize::Speaker.divergence(speaker1, speaker2) > 0
+    assert_equal Diarize::Speaker.divergence(speaker1, speaker2), Diarize::Speaker.divergence(speaker2, speaker1)
+    assert_equal Diarize::Speaker.divergence(speaker1, speaker1), 0.0
+  end
+
 end
