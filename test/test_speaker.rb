@@ -44,4 +44,12 @@ class TestSpeaker < Test::Unit::TestCase
     File.delete(tmp.path)
   end
 
+  def test_divergence_returns_nil_if_one_model_is_empty
+    speaker1 = Diarize::Speaker.new
+    speaker2 = Diarize::Speaker.new
+    speaker2.model = nil
+    assert_equal Diarize::Speaker.divergence(speaker1, speaker2), nil
+    assert_equal Diarize::Speaker.divergence(speaker2, speaker1), nil
+  end
+
 end
