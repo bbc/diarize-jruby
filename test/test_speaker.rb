@@ -61,4 +61,14 @@ class TestSpeaker < Test::Unit::TestCase
     assert_equal Diarize::Speaker.divergence(speaker1, speaker1), 0.0
   end
 
+  def test_normalise
+    # Testing M-Norm
+    model_file = File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm')
+    speaker1 = Diarize::Speaker.new(nil, nil, model_file)
+    speaker2 = Diarize::Speaker.new
+    assert Diarize::Speaker.divergence(speaker1, speaker2) != 1.0
+    speaker1.normalize! # Putting speaker1.gmm at distance 1 from UBM
+    assert Diarize::Speaker.divergence(speaker1, speaker2) - 1.0 < 1e-12 # rounding error
+  end
+
 end
