@@ -59,9 +59,17 @@ module Diarize
       fr.lium.spkDiarization.libModel.Distance.GDMAP(speaker1.model, speaker2.model)
     end
 
+    def self.match_sets(speakers1, speakers2)
+      matches = []
+      speakers1.each do |s1|
+        speakers2.each do |s2|
+          matches << [ s1, s2 ] if s1.same_speaker_as(s2)
+        end
+      end
+      matches
+    end
+
     def self.match(speakers)
-      speakers.each { |s| s.normalize! }
-      speakers = speakers.select { |s| s.mean_log_likelihood > @@log_likelihood_threshold }
       speakers.combination(2).select { |s1, s2| s1.same_speaker_as(s2) }
     end
 
@@ -86,6 +94,7 @@ module Diarize
 
     def same_speaker_as(other)
       # Detection score defined in Ben2005
+      return unless [ self.mean_log_likelihood, other.mean_log_likelihood ].min > @@log_likelihood_threshold
       self.normalize!
       other.normalize!
       detection_score = 1.0 - Speaker.divergence(other, self)
