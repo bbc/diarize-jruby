@@ -42,6 +42,14 @@ module Diarize
       write_gmm(filename, @model)
     end
 
+    def self.detection_threshold=(threshold)
+      @@detection_threshold = threshold
+    end
+
+    def self.detection_threshold
+      @@detection_threshold
+    end
+
     def self.load_model(filename)
       read_gmm(filename)
     end

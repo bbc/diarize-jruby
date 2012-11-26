@@ -3,6 +3,11 @@ require 'tempfile'
 
 class TestSpeaker < Test::Unit::TestCase
 
+  def test_detection_threshold
+    Diarize::Speaker.detection_threshold = 0.1
+    assert_equal 0.1, Diarize::Speaker.detection_threshold
+  end
+
   def test_find_or_create_gives_same_object_if_called_with_same_id
     speaker1 = Diarize::Speaker.find_or_create('S0', 'M')
     speaker2 = Diarize::Speaker.find_or_create('S0', 'M')
