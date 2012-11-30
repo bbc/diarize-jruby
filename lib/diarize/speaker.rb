@@ -109,6 +109,18 @@ module Diarize
       detection_score > @@detection_threshold
     end
 
+    def supervector
+      normalize!
+      supervector = []
+      (0..(model.nb_of_components - 1)).each do |k|
+        gaussian = model.components.get(k)
+        (0..(gaussian.dim - 1)).each do |i|
+          supervector << gaussian.mean(i)
+        end
+      end
+      supervector
+    end
+
     include RdfMapper
 
     def namespaces

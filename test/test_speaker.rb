@@ -40,6 +40,14 @@ class TestSpeaker < Test::Unit::TestCase
     assert_equal speaker.mean_log_likelihood, 1
   end
 
+  def test_supervector
+    speaker = Diarize::Speaker.new(nil, nil, File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm'))
+    assert_equal 512 * 24, speaker.supervector.count
+    # Testing the first and the last elements are OK
+    assert_equal speaker.model.components[0].mean(0), speaker.supervector[0]
+    assert_equal speaker.model.components[511].mean(23), speaker.supervector[512 * 24 - 1]
+  end
+
   def test_save_and_load_model
     speaker = Diarize::Speaker.new
     tmp = Tempfile.new(['diarize-test', '.gmm'])
