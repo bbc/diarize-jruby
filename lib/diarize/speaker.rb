@@ -21,12 +21,14 @@ module Diarize
       unless model_file
         # A generic speaker, associated with a universal background model
         @model = Speaker.load_model(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
+        # We don't attempt to normalize the UBM
+        @normalized = true
       else
         @model = Speaker.load_model(model_file)
+        @normalized = false
       end
       @uri = uri
       @gender = gender
-      @normalized = false
     end
 
     def mean_log_likelihood
@@ -72,6 +74,8 @@ module Diarize
     end
 
     def self.divergence_ruby(speaker1, speaker2)
+      # About 100 times less efficient than the Java
+      # implementation...
       score = 0.0
       (0..(speaker1.model.nb_of_components - 1)).each do |k|
         gaussian1 = speaker1.model.components.get(k)

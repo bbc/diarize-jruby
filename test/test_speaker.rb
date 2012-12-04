@@ -91,4 +91,11 @@ class TestSpeaker < Test::Unit::TestCase
     assert Diarize::Speaker.divergence(speaker1, speaker2) - 1.0 < 1e-12 # rounding error
   end
 
+  def test_do_not_normalize_ubm
+    speaker = Diarize::Speaker.new
+    old_supervector = speaker.supervector
+    speaker.normalize!
+    assert_equal old_supervector, speaker.supervector
+  end
+
 end
