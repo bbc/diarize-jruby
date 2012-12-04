@@ -64,7 +64,31 @@ module Diarize
       return unless speaker1.model and speaker2.model
       # MAP Gaussian divergence
       # See "A model space framework for efficient speaker detection", Interspeech'05
+      divergence_lium(speaker1, speaker2)
+    end
+
+    def self.divergence_lium(speaker1, speaker2)
       fr.lium.spkDiarization.libModel.Distance.GDMAP(speaker1.model, speaker2.model)
+    end
+
+    def self.divergence_ruby(speaker1, speaker2)
+      score = 0.0
+      (0..(speaker1.model.nb_of_components - 1)).each do |k|
+        gaussian1 = speaker1.model.components.get(k)
+        gaussian2 = speaker2.model.components.get(k)
+        gaussian_div = 0.0
+        (0..(gaussian1.dim - 1)).each do |i|
+          dmean = gaussian1.mean(i) - gaussian2.mean(i)
+          v = Math.sqrt(gaussian1.getCovariance(i, i)) * Math.sqrt(gaussian2.getCovariance(i, i))
+          if v < 0
+            $stderr.puts "Warning: variance problem in gaussian divergence"
+            v = 1e-8
+          end
+          gaussian_div += (dmean * dmean) / v
+        end
+        score += gaussian1.weight * gaussian_div
+      end
+      score
     end
 
     def self.match_sets(speakers1, speakers2)

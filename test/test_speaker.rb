@@ -74,6 +74,13 @@ class TestSpeaker < Test::Unit::TestCase
     assert_equal Diarize::Speaker.divergence(speaker1, speaker1), 0.0
   end
 
+  def test_divergence_ruby_is_same_as_divergence_lium
+    model_file = File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm')
+    speaker1 = Diarize::Speaker.new(nil, nil, model_file)
+    speaker2 = Diarize::Speaker.new
+    assert_equal Diarize::Speaker.divergence_lium(speaker1, speaker2), Diarize::Speaker.divergence_ruby(speaker1, speaker2)
+  end
+
   def test_normalise
     # Testing M-Norm
     model_file = File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm')
