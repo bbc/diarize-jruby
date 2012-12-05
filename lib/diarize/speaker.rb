@@ -84,9 +84,9 @@ module Diarize
       @@gaussian_weights_supervector_ubm ||= ( 
         ubm = new
         weights = DoubleMatrix.new(ubm.supervector_dim, 1)
-        (0..(ubm.model.nb_of_components - 1)).each do |k|
+        ubm.model.nb_of_components.times do |k|
           gaussian = ubm.model.components.get(k)
-          (0..(gaussian.dim - 1)).each do |i|
+          gaussian.dim.times do |i|
             weights[k * gaussian.dim + i] = gaussian.weight
           end
         end
@@ -98,9 +98,9 @@ module Diarize
       @@covariance_supervector_ubm ||= (
         ubm = new
         cov_supervector = DoubleMatrix.new(ubm.supervector_dim, 1)
-        (0..(ubm.model.nb_of_components - 1)).each do |k|
+        ubm.model.nb_of_components.times do |k|
          gaussian = ubm.model.components.get(k)
-          (0..(gaussian.dim - 1)).each do |i|
+          gaussian.dim.times do |i|
             cov_supervector[k * gaussian.dim + i] = gaussian.getCovariance(i, i)
           end
         end
@@ -129,9 +129,9 @@ module Diarize
         # according to GDMAP)
         speaker_ubm = Speaker.new
         distance_to_ubm = Math.sqrt(Speaker.divergence(self, speaker_ubm))
-        (0..(model.nb_of_components - 1)).each do |k|
+        model.nb_of_components.times do |k|
           gaussian = model.components.get(k)
-          (0..(gaussian.dim - 1)).each do |i|
+          gaussian.dim.times do |i|
             normalized_mean = (1.0 / distance_to_ubm) * gaussian.mean(i) + (1.0 - 1.0 / distance_to_ubm)  * speaker_ubm.model.components.get(k).mean(i)
             gaussian.set_mean(i, normalized_mean) 
           end
@@ -157,9 +157,9 @@ module Diarize
     def supervector
       @supervector ||= (
         supervector = DoubleMatrix.new(supervector_dim, 1)
-        (0..(model.nb_of_components - 1)).each do |k|
+        model.nb_of_components.times do |k|
           gaussian = model.components.get(k)
-          (0..(gaussian.dim - 1)).each do |i|
+          gaussian.dim.times do |i|
             supervector[k * gaussian.dim + i] = gaussian.mean(i)
           end
         end
