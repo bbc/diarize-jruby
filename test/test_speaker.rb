@@ -78,7 +78,7 @@ class TestSpeaker < Test::Unit::TestCase
     model_file = File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm')
     speaker1 = Diarize::Speaker.new(nil, nil, model_file)
     speaker2 = Diarize::Speaker.new
-    assert_equal Diarize::Speaker.divergence_lium(speaker1, speaker2), Diarize::Speaker.divergence_ruby(speaker1, speaker2)
+    assert_equal Diarize::Speaker.divergence_lium(speaker1, speaker2).round(12), Diarize::Speaker.divergence_ruby(speaker1, speaker2).round(12)
   end
 
   def test_normalise
