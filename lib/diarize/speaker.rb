@@ -151,7 +151,7 @@ module Diarize
     end
 
     def supervector_dim
-      dim = model.nb_of_components * model.components.get(0).dim
+      @supervector_dim ||= model.nb_of_components * model.components.get(0).dim
     end
 
     def supervector
