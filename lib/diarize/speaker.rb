@@ -77,35 +77,7 @@ module Diarize
     end
 
     def self.divergence_ruby(speaker1, speaker2)
-      gaussian_weights_supervector_ubm.mul(((speaker1.supervector - speaker2.supervector) ** 2) / covariance_supervector_ubm).sum
-    end
-
-    def self.gaussian_weights_supervector_ubm
-      @@gaussian_weights_supervector_ubm ||= ( 
-        ubm = new
-        weights = DoubleMatrix.new(ubm.supervector_dim, 1)
-        ubm.model.nb_of_components.times do |k|
-          gaussian = ubm.model.components.get(k)
-          gaussian.dim.times do |i|
-            weights[k * gaussian.dim + i] = gaussian.weight
-          end
-        end
-        weights
-      )
-    end
-
-    def self.covariance_supervector_ubm
-      @@covariance_supervector_ubm ||= (
-        ubm = new
-        cov_supervector = DoubleMatrix.new(ubm.supervector_dim, 1)
-        ubm.model.nb_of_components.times do |k|
-         gaussian = ubm.model.components.get(k)
-          gaussian.dim.times do |i|
-            cov_supervector[k * gaussian.dim + i] = gaussian.getCovariance(i, i)
-          end
-        end
-        cov_supervector
-      )
+      SuperVector.divergence(speaker1.supervector, speaker2.supervector)
     end
 
     def self.match_sets(speakers1, speakers2)
@@ -150,21 +122,8 @@ module Diarize
       detection_score > @@detection_threshold
     end
 
-    def supervector_dim
-      @supervector_dim ||= model.nb_of_components * model.components.get(0).dim
-    end
-
     def supervector
-      @supervector ||= (
-        supervector = DoubleMatrix.new(supervector_dim, 1)
-        model.nb_of_components.times do |k|
-          gaussian = model.components.get(k)
-          gaussian.dim.times do |i|
-            supervector[k * gaussian.dim + i] = gaussian.mean(i)
-          end
-        end
-        supervector
-      )
+      @supervector ||= SuperVector.generate_from_model(model)
     end
 
     include RdfMapper

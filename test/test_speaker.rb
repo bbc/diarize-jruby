@@ -42,10 +42,10 @@ class TestSpeaker < Test::Unit::TestCase
 
   def test_supervector
     speaker = Diarize::Speaker.new(nil, nil, File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm'))
-    assert_equal 512 * 24, speaker.supervector.count
+    assert_equal 512 * 24, speaker.supervector.dim
     # Testing the first and the last elements are OK
-    assert_equal speaker.model.components[0].mean(0), speaker.supervector[0]
-    assert_equal speaker.model.components[511].mean(23), speaker.supervector[512 * 24 - 1]
+    assert_equal speaker.model.components[0].mean(0), speaker.supervector.vector[0]
+    assert_equal speaker.model.components[511].mean(23), speaker.supervector.vector[512 * 24 - 1]
   end
 
   def test_save_and_load_model
