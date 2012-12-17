@@ -13,7 +13,7 @@ module Diarize
     def self.generate_from_model(model)
       # Generates a supervector from a LIUM GMM
       dim = model.nb_of_components * model.components.get(0).dim
-      vector = DoubleMatrix.new(dim, 1)
+      vector = DoubleMatrix.new(1, dim)
       model.nb_of_components.times do |k|
         gaussian = model.components.get(k)
         gaussian.dim.times do |i|
@@ -27,7 +27,7 @@ module Diarize
       # Returns a vector of gaussian weights, same dimension as speaker's super vectors
       @@ubm_gaussian_weights ||= (
         ubm = Speaker.new
-        weights = DoubleMatrix.new(ubm.supervector.dim, 1)
+        weights = DoubleMatrix.new(1, ubm.supervector.dim)
         ubm.model.nb_of_components.times do |k|
           gaussian = ubm.model.components.get(k)
           gaussian.dim.times do |i|
@@ -42,7 +42,7 @@ module Diarize
       # Returns a vector of diagonal covariances, same dimension as speaker's super vectors
       @@ubm_covariance ||= (
         ubm = Speaker.new
-        cov = DoubleMatrix.new(ubm.supervector.dim, 1)
+        cov = DoubleMatrix.new(1, ubm.supervector.dim)
         ubm.model.nb_of_components.times do |k|
           gaussian = ubm.model.components.get(k)
           gaussian.dim.times do |i|
@@ -58,7 +58,7 @@ module Diarize
     end
 
     def dim
-      @vector.rows
+      @vector.columns
     end
 
   end
