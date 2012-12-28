@@ -8,6 +8,6 @@ Gem::Specification.new do |s|
   s.description = "A library for JRuby wrapping the LIUM Speaker Diarization and including a few extra tools"
   s.has_rdoc = false
   s.authors = ['Yves Raimond']
-  s.files = ["README.md", "diarize-jruby.gemspec", "lib", "lib/diarize.rb", "lib/diarize/LIUM_SpkDiarization-4.2.jar", "lib/diarize/lium.rb", "lib/diarize/audio.rb", "lib/diarize/audio_player.rb", "lib/diarize/segmentation.rb", "lib/diarize/segment.rb", "lib/diarize/ubm.gmm", "lib/diarize/speaker.rb"]
+  s.files = ["README.md", "diarize-jruby.gemspec", "lib", "lib/diarize.rb", "lib/diarize/LIUM_SpkDiarization-4.2.jar", "lib/diarize/lium.rb", "lib/diarize/audio.rb", "lib/diarize/audio_player.rb", "lib/diarize/segmentation.rb", "lib/diarize/segment.rb", "lib/diarize/ubm.gmm", "lib/diarize/speaker.rb", "lib/diarize/super_vector.rb"]
 end
 
