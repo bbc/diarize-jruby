@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = "diarize-jruby"
-  s.version = "0.0.1"
-  s.date = "2011-03-16"
+  s.version = "0.1.0"
+  s.date = "2013-01-03"
   s.summary = "Speaker Diarization for JRuby"
   s.email = "yves.raimond@bbc.co.uk"
   s.homepage = "http://github.com/bbcrd/diarize"
