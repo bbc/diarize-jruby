@@ -15,4 +15,10 @@ class TestSuperVector < Test::Unit::TestCase
     end
   end
 
+  def test_hash
+    model = Diarize::Speaker.load_model(File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm'))
+    sv = Diarize::SuperVector.generate_from_model(model)
+    assert_equal sv.vector.hash, sv.hash
+  end
+
 end

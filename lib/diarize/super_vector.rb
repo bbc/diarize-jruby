@@ -61,6 +61,10 @@ module Diarize
       @vector.columns
     end
 
+    def hash
+      @vector.hash
+    end
+
   end
 
 end

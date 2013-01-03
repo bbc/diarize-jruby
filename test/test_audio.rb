@@ -1,5 +1,5 @@
 require 'helper'
-require 'mocha'
+require 'mocha/setup'
 require 'ostruct'
 
 class TestAudio < Test::Unit::TestCase
