@@ -26,7 +26,7 @@ module Diarize
     def self.ubm_gaussian_weights
       # Returns a vector of gaussian weights, same dimension as speaker's super vectors
       @@ubm_gaussian_weights ||= (
-        ubm = Speaker.new
+        ubm = Speaker.ubm
         weights = DoubleMatrix.new(1, ubm.supervector.dim)
         ubm.model.nb_of_components.times do |k|
           gaussian = ubm.model.components.get(k)
@@ -41,7 +41,7 @@ module Diarize
     def self.ubm_covariance
       # Returns a vector of diagonal covariances, same dimension as speaker's super vectors
       @@ubm_covariance ||= (
-        ubm = Speaker.new
+        ubm = Speaker.ubm
         cov = DoubleMatrix.new(1, ubm.supervector.dim)
         ubm.model.nb_of_components.times do |k|
           gaussian = ubm.model.components.get(k)

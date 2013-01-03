@@ -20,8 +20,8 @@ class TestSpeaker < Test::Unit::TestCase
     assert_equal speaker.gender, 'm'
   end
 
-  def test_initialize_default
-    speaker = Diarize::Speaker.new
+  def test_initialize_ubm
+    speaker = Diarize::Speaker.ubm
     assert_equal speaker.gender, nil
     assert_equal speaker.uri, nil
     assert_equal speaker.model.name, 'MSMTFSFT' # UBM GMM
@@ -34,7 +34,7 @@ class TestSpeaker < Test::Unit::TestCase
   end
 
   def test_mean_log_likelihood
-    speaker = Diarize::Speaker.new
+    speaker = Diarize::Speaker.ubm
     assert speaker.mean_log_likelihood.nan?
     speaker.mean_log_likelihood = 1
     assert_equal speaker.mean_log_likelihood, 1
@@ -49,7 +49,7 @@ class TestSpeaker < Test::Unit::TestCase
   end
 
   def test_save_and_load_model
-    speaker = Diarize::Speaker.new
+    speaker = Diarize::Speaker.ubm
     tmp = Tempfile.new(['diarize-test', '.gmm'])
     speaker.save_model(tmp.path)
     model = Diarize::Speaker.load_model(tmp.path)
@@ -58,8 +58,8 @@ class TestSpeaker < Test::Unit::TestCase
   end
 
   def test_divergence_returns_nil_if_one_model_is_empty
-    speaker1 = Diarize::Speaker.new
-    speaker2 = Diarize::Speaker.new
+    speaker1 = Diarize::Speaker.ubm
+    speaker2 = Diarize::Speaker.ubm
     speaker2.model = nil
     assert_equal Diarize::Speaker.divergence(speaker1, speaker2), nil
     assert_equal Diarize::Speaker.divergence(speaker2, speaker1), nil
@@ -68,7 +68,7 @@ class TestSpeaker < Test::Unit::TestCase
   def test_divergence_is_symmetric
     model_file = File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm')
     speaker1 = Diarize::Speaker.new(nil, nil, model_file)
-    speaker2 = Diarize::Speaker.new
+    speaker2 = Diarize::Speaker.ubm
     assert Diarize::Speaker.divergence(speaker1, speaker2) > 0
     assert_equal Diarize::Speaker.divergence(speaker1, speaker2), Diarize::Speaker.divergence(speaker2, speaker1)
     assert_equal Diarize::Speaker.divergence(speaker1, speaker1), 0.0
@@ -77,7 +77,7 @@ class TestSpeaker < Test::Unit::TestCase
   def test_divergence_ruby_is_same_as_divergence_lium
     model_file = File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm')
     speaker1 = Diarize::Speaker.new(nil, nil, model_file)
-    speaker2 = Diarize::Speaker.new
+    speaker2 = Diarize::Speaker.ubm
     assert_equal Diarize::Speaker.divergence_lium(speaker1, speaker2).round(12), Diarize::Speaker.divergence_ruby(speaker1, speaker2).round(12)
   end
 
@@ -85,14 +85,14 @@ class TestSpeaker < Test::Unit::TestCase
     # Testing M-Norm
     model_file = File.join(File.dirname(__FILE__), 'data', 'speaker1.gmm')
     speaker1 = Diarize::Speaker.new(nil, nil, model_file)
-    speaker2 = Diarize::Speaker.new
+    speaker2 = Diarize::Speaker.ubm
     assert Diarize::Speaker.divergence(speaker1, speaker2) != 1.0
     speaker1.normalize! # Putting speaker1.gmm at distance 1 from UBM
     assert Diarize::Speaker.divergence(speaker1, speaker2) - 1.0 < 1e-12 # rounding error
   end
 
   def test_do_not_normalize_ubm
-    speaker = Diarize::Speaker.new
+    speaker = Diarize::Speaker.ubm
     old_supervector = speaker.supervector
     speaker.normalize!
     assert_equal old_supervector, speaker.supervector

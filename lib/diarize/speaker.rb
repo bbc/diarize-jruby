@@ -17,21 +17,21 @@ module Diarize
 
     @@speakers = {}
 
-    attr_accessor :model, :model_uri
+    attr_accessor :model_uri, :model, :normalized
     attr_reader :gender
 
     def initialize(uri = nil, gender = nil, model_file = nil)
-      unless model_file
-        # A generic speaker, associated with a universal background model
-        @model = Speaker.load_model(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
-        # We don't attempt to normalize the UBM
-        @normalized = true
-      else
-        @model = Speaker.load_model(model_file)
-        @normalized = false
-      end
+      @model = Speaker.load_model(model_file) if model_file
       @uri = uri
       @gender = gender
+      @normalized = false
+    end
+
+    def self.ubm
+      speaker = Speaker.new
+      speaker.normalized = true
+      speaker.model = Speaker.load_model(File.join(File.expand_path(File.dirname(__FILE__)), 'ubm.gmm'))
+      speaker
     end
 
     def mean_log_likelihood
@@ -99,7 +99,7 @@ module Diarize
         # Applies M-Norm from "D-MAP: a Distance-Normalized MAP Estimation of Speaker Models for Automatic Speaker Verification"
         # to the associated GMM, placing it on a unit hyper-sphere with a UBM centre (model will be at distance one from the UBM
         # according to GDMAP)
-        speaker_ubm = Speaker.new
+        speaker_ubm = Speaker.ubm
         distance_to_ubm = Math.sqrt(Speaker.divergence(self, speaker_ubm))
         model.nb_of_components.times do |k|
           gaussian = model.components.get(k)
