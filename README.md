@@ -7,11 +7,11 @@ See http://lium3.univ-lemans.fr/diarization/doku.php/welcome
 Example use
 -----------
 
-  $ jruby -S gem install rdf-mapper
+  $ jruby -S gem install to-rdf
   $ jruby -S gem install diarize-jruby
   $ jruby -S irb
   > require 'diarize'
-  > audio = Diarize::Audio.new URI('http://bbcdbmsw023.national.core.bbc.co.uk/MediaLibrary/Live/2011/05/X0909378.wav')
+  > audio = Diarize::Audio.new URI('http://example.com/file.wav')
   > audio.analyze!
   > audio.segments
   > audio.speakers

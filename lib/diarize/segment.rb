@@ -1,7 +1,7 @@
 require File.join(File.expand_path(File.dirname(__FILE__)), 'audio_player')
 
 require 'rubygems'
-require 'rdf_mapper'
+require 'to_rdf'
 require 'uri'
 
 module Diarize
@@ -28,7 +28,7 @@ module Diarize
       player.play(@audio.file, start, duration)
     end
 
-    include RdfMapper
+    include ToRdf
 
     def namespaces
       super.merge 'ws' => 'http://wsarchive.prototype0.net/ontology/'

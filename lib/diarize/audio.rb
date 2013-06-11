@@ -3,7 +3,7 @@ require File.join(File.expand_path(File.dirname(__FILE__)), 'segmentation')
 require File.join(File.expand_path(File.dirname(__FILE__)), 'speaker')
 
 require 'rubygems'
-require 'rdf_mapper'
+require 'to_rdf'
 require 'uri'
 
 module Diarize
@@ -76,7 +76,7 @@ module Diarize
       speakers.sort {|s1, s2| duration_by_speaker(s1) <=> duration_by_speaker(s2)}.reverse
     end
 
-    include RdfMapper
+    include ToRdf
 
     def namespaces
       super.merge 'ws' => 'http://wsarchive.prototype0.net/ontology/', 'mo' => 'http://purl.org/ontology/mo/'

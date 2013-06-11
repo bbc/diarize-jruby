@@ -1,5 +1,5 @@
 require 'rubygems'
-require 'rdf_mapper'
+require 'to_rdf'
 require 'jblas'
 
 module Diarize
@@ -99,6 +99,7 @@ module Diarize
         # Applies M-Norm from "D-MAP: a Distance-Normalized MAP Estimation of Speaker Models for Automatic Speaker Verification"
         # to the associated GMM, placing it on a unit hyper-sphere with a UBM centre (model will be at distance one from the UBM
         # according to GDMAP)
+        # Using supervectors: vector = (1.0 / distance_to_ubm) * vector + (1.0 - 1.0 / distance_to_ubm) * ubm_vector
         speaker_ubm = Speaker.ubm
         distance_to_ubm = Math.sqrt(Speaker.divergence(self, speaker_ubm))
         model.nb_of_components.times do |k|
@@ -123,10 +124,11 @@ module Diarize
     end
 
     def supervector
+      # TODO: cache only when normalized
       @supervector ||= SuperVector.generate_from_model(model)
     end
 
-    include RdfMapper
+    include ToRdf
 
     def namespaces
       super.merge 'ws' => 'http://wsarchive.prototype0.net/ontology/'
