@@ -65,3 +65,8 @@ References
 [Do2003] M. N. Do, "Fast Approximation of Kullback-Leibler Distance for Dependence Trees and Hidden Markov Models", IEEE Signal Processing Letters, April 2003
 [Ben2005] M. Ben and G. Gravier and F. Bimbot. "A model space framework for efficient speaker detection", Proceedings of INTERSPEECH, 2005
 [Campbell2006] W. M. Campbell, D. E. Sturim and D. A. Reynolds, "Support vector machines using GMM supervectors for speaker verification", IEEE Signal Processing Letters, 2006, 13, 308-311
+
+Licensing terms and authorship
+------------------------------
+
+See 'COPYING' and 'AUTHORS' files.
