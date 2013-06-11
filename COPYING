@@ -5,6 +5,11 @@
     All code here, except where otherwise indicated, is licensed under
     the GNU Affero General Public License version 3.
 
+    This library includes a binary JAR file from the LIUM project, which code
+    is licensed under the GNU General Public License version 2. See
+    http://lium3.univ-lemans.fr/diarization/doku.php/licence for more
+    information.
+
     This license includes many restrictions. If this causes a problem,
     please contact us. See "AUTHORS" for contact details.
 
