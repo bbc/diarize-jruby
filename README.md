@@ -14,7 +14,6 @@ Speaker diarization
 This library gives acccess to the algorithm developed by the LIUM 
 for the ESTER 2 evaluation campaign and described in [Meigner2010].
 
-
 It wraps a binary JAR file compiled from 
 http://lium3.univ-lemans.fr/diarization/doku.php/welcome.
 
@@ -33,7 +32,7 @@ This algorithm builds on top of the LIUM toolkit and uses the following techniqu
  * The detection score specified in [Ben2005] 
 
 It also includes support for speaker supervectors [Campbell2006], which can be used
-in combination with our ruby-lsh library for fast speaker matching.
+in combination with our ruby-lsh library for fast speaker identification.
 
 Example use
 -----------
@@ -47,11 +46,11 @@ Example use
   > audio.segments
   > audio.speakers
   > speakers = audio.speakers
-  > speakers[5].gender
-  > speakers[5].model.mean\_log\_likelihood
-  > speakers[5].model.components.size
-  > audio.segments\_by\_speaker(speakers[5])[0].play
-  > audio.segments\_by\_speaker(speakers[5])[1].play
+  > speakers.first.gender
+  > speakers.first.model.mean\_log\_likelihood
+  > speakers.first.model.components.size
+  > audio.segments\_by\_speaker(speakers.first)[0].play
+  > audio.segments\_by\_speaker(speakers.first)[1].play
   > ...
   > speakers |= other\_speakers
   > Diarize::Speaker.match(speakers)
