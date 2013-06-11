@@ -4,7 +4,7 @@ diarize-jruby
 This library provides an easy-to-use toolkit for speaker
 segmentation (diarization) and identification from audio.
 
-This library has been used on the BBC R&D World Service archive prototype.
+This library is being used within the BBC R&D World Service archive prototype.
 See http://worldservice.prototyping.bbc.co.uk/programmes/X0403940 for
 an example.
 
