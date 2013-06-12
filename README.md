@@ -37,7 +37,8 @@ in combination with our ruby-lsh library for fast speaker identification.
 Example use
 -----------
 
-  $ jruby -S gem install to-rdf
+This gem has been tested with jruby 1.7.2 onwards.
+
   $ jruby -S gem install diarize-jruby
   $ jruby -S irb
   > require 'diarize'
