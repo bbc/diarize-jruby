@@ -55,12 +55,12 @@ This gem has been tested with jruby 1.7.0 onwards.
     > audio.to_rdf
     > speakers = audio.speakers
     > speakers.first.gender
-    > speakers.first.model.mean\_log\_likelihood
+    > speakers.first.model.mean_log_likelihood
     > speakers.first.model.components.size
-    > audio.segments\_by\_speaker(speakers.first)[0].play
-    > audio.segments\_by\_speaker(speakers.first)[1].play
+    > audio.segments_by_speaker(speakers.first)[0].play
+    > audio.segments_by_speaker(speakers.first)[1].play
     > ...
-    > speakers |= other\_speakers
+    > speakers |= other_speakers
     > Diarize::Speaker.match(speakers)
 
 
