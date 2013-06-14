@@ -43,7 +43,7 @@ identification.
 Example use
 -----------
 
-This gem has been tested with jruby 1.7.2 onwards.
+This gem has been tested with jruby 1.7.0 onwards.
 
     $ jruby -S gem install diarize-jruby
     $ jruby -S irb
