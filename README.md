@@ -10,6 +10,7 @@ archive prototype.
 See http://worldservice.prototyping.bbc.co.uk/programmes/X0403940 for
 an example.
 
+
 Speaker diarization
 -------------------
 
@@ -38,6 +39,7 @@ It also includes support for speaker supervectors [Campbell2006], which
 can be used in combination with our ruby-lsh library for fast speaker 
 identification.
 
+
 Example use
 -----------
 
@@ -62,6 +64,12 @@ This gem has been tested with jruby 1.7.2 onwards.
     > Diarize::Speaker.match(speakers)
 
 
+Running tests
+-------------
+
+    $ jruby -S rake
+
+
 References
 ----------
 
@@ -84,6 +92,7 @@ Proceedings of INTERSPEECH, 2005
 [Campbell2006] W. M. Campbell, D. E. Sturim and D. A. Reynolds, 
 "Support vector machines using GMM supervectors for speaker verification", 
 IEEE Signal Processing Letters, 2006, 13, 308-311
+
 
 Licensing terms and authorship
 ------------------------------
