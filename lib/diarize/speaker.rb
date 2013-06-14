@@ -24,12 +24,8 @@ module Diarize
 
     include JBLAS
 
-    # Some possible matching heuristics if using GDMAP:
-    # - speaker mean_log_likelihood needs to be more than -33 to be considered for match
-    # - distance between two speakers need to be less than distance between speaker and universal model + detection threshold to be considered
-
     @@log_likelihood_threshold = -33
-    @@detection_threshold = 0.2 # Need to learn that parameter
+    @@detection_threshold = 0.2
 
     @@speakers = {}
 
