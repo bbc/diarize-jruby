@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.date = "2013-06-14"
   s.summary = "Speaker Diarization for JRuby"
   s.email = "yves.raimond@bbc.co.uk"
-  s.homepage = "http://github.com/bbcrd/diarize"
+  s.homepage = "https://github.com/bbcrd/diarize-jruby"
   s.description = "A library for JRuby wrapping the LIUM Speaker Diarization and including a few extra tools"
   s.has_rdoc = false
   s.authors = ['Yves Raimond']
